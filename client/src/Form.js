@@ -24,7 +24,7 @@ export default class Form extends React.Component {
 
     handleKeyDown = (e) => {
         if (e.key === 'Enter') {
-            this.props.submit(this.state.first)
+            this.props.submit(this.state.first, this.state.last)
             this.setState({ text: '' })
         }
     }
