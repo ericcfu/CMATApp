@@ -2,9 +2,11 @@
 // ... or using `require()`
 const { GraphQLServer } = require('graphql-yoga')
 
+// mongoose connection
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/testCMAT1');
 
+// mongoose calls
 var Todo = mongoose.model('Todo', {
   text: String,
   complete: Boolean,
@@ -22,6 +24,7 @@ var Contest = mongoose.model('Contest', {
   athletes: Array,
 })
 
+// schema
 const typeDefs = `
   type Query {
     hello(name: String): String!
@@ -56,10 +59,13 @@ const typeDefs = `
 
     createContest(name: String!, type: String!): Contest
     removeContest(id: ID!): Boolean
+
+    addAthleteToContest(contestId: ID!, athleteId: ID!): Boolean
+    addContestToAthlete(athleteId: ID!, contestId: ID!): Boolean
   }
   
 `
-
+// resolvers
 const resolvers = {
   Query: {
     hello: (_, { name }) => `Hello ${name || 'World'}`,
@@ -104,9 +110,26 @@ const resolvers = {
       return true;
     },
 
+    // adding events to athletes and other way around
+    addContestToAthlete: async (_, { athleteId, contestId }) => {
+      contests = await Athlete.findById(athleteId).contests.slice();
+      contest = await Contest.findById(contestId);
+      contests += contest;
+      Athlete.findByIdAndUpdate(id, { contests });
+      return true;
+    },
+
+    addAthleteToContest: async (_, { contestId, athleteId }) => {
+      athletes = await Contest.findById(contestId).athlete.slice();
+      athlete = await Athlete.findById(athleteId);
+      athletes += athlete;
+      Contest.findByIdAndUpdate(id, { athletes })
+      return true;
+    }
   }
 }
 
+// db start stuff
 const server = new GraphQLServer({ typeDefs, resolvers })
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));

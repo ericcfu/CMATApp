@@ -11,6 +11,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Form from './Form';
 
+// graphql queries
 const TodosQuery = gql`
 query {
   todos {
@@ -31,6 +32,7 @@ query {
 }
 `;
 
+// graphql mutations
 const UpdateMutation = gql`
   mutation($id: ID!, $complete: Boolean!) {
     updateTodo(id: $id, complete: $complete)
@@ -69,6 +71,7 @@ const CreateAthleteMutation = gql`
   }
 `;
 
+// Main App component
 class App extends Component {
   // updateTodo = async todo => {
   //   // update todo
@@ -157,7 +160,7 @@ class App extends Component {
     });
   }
 
-
+  // app render methods
   render() {
     const { data: { loading, athletes } } = this.props;
     if (loading) {
