@@ -2,14 +2,15 @@ import React, { Component } from 'react';
 import gql from "graphql-tag"
 import { graphql, compose } from 'react-apollo'
 import Paper from '@material-ui/core/Paper';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
+// import List from '@material-ui/core/List';
+// import ListItem from '@material-ui/core/ListItem';
+// import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+// import ListItemText from '@material-ui/core/ListItemText';
 // import Checkbox from '@material-ui/core/Checkbox';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
+// import IconButton from '@material-ui/core/IconButton';
+// import CloseIcon from '@material-ui/icons/Close';
 import Form from './Form';
+import AthleteList from './Lists';
 
 // graphql queries
 const TodosQuery = gql`
@@ -125,7 +126,7 @@ class App extends Component {
       update: store => {
         const data = store.readQuery({ query: AthletesQuery });
         data.athletes = data.athletes.filter(x => x.id !== athlete.id);
-        store.writeQuery({query: AthletesQuery, data})
+        store.writeQuery({ query: AthletesQuery, data })
       },
     });
   }
@@ -172,29 +173,7 @@ class App extends Component {
         <div style={{ margin: 'auto', width: 400 }}>
           <Paper elevation={1}>
             <Form submit={this.createAthlete} />
-            <List>
-              {athletes.map(athlete => (
-                <ListItem
-                  key={athlete.id}
-                  role={undefined}
-                  dense
-                  button
-                // onClick={() => this.updateTodo(todo)}
-                >
-                  {/* <Checkbox
-                    checked={todo.complete}
-                    tabIndex={-1}
-                    disableRipple
-                  /> */}
-                  <ListItemText primary={athlete.first + " " + athlete.last} />
-                  <ListItemSecondaryAction>
-                    <IconButton onClick={() => this.removeAthlete(athlete)}>
-                      <CloseIcon />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-              ))}
-            </List >
+            <AthleteList removeAthlete={this.removeAthlete} athletes={athletes} />
           </Paper>
         </div>
       </div>
