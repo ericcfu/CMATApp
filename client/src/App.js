@@ -54,7 +54,7 @@ class App extends Component {
       },
     });
   }
-  
+
   createAthlete = async (first, last) => {
     await this.props.createAthlete({
       variables: {
@@ -72,6 +72,10 @@ class App extends Component {
   athleteClicked = async (id) => {
     // pull up list of events for that athlete
     // duplicate the athletes list page for events within that athlete
+    // create state variables for what list to render
+    // create state variable for what type of object is the current parent of
+    // the container rendering (are we looking at events of an athlete?, athletes of an event?,
+    // events list?, athletes list?)
   }
 
   // app render methods
