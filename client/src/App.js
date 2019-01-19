@@ -13,16 +13,6 @@ import Form from './Form';
 import AthleteList from './Lists';
 
 // graphql queries
-const TodosQuery = gql`
-query {
-  todos {
-    id
-    text
-    complete
-  }
-}
-`;
-
 const AthletesQuery = gql`
 query {
   athletes {
@@ -34,31 +24,9 @@ query {
 `;
 
 // graphql mutations
-const UpdateMutation = gql`
-  mutation($id: ID!, $complete: Boolean!) {
-    updateTodo(id: $id, complete: $complete)
-  }
-`;
-
-const RemoveMutation = gql`
-  mutation($id: ID!) {
-    removeTodo(id: $id)
-  }
-`;
-
 const RemoveAthleteMutation = gql`
   mutation($id: ID!) {
     removeAthlete(id: $id)
-  }
-`;
-
-const CreateTodoMutation = gql`
-  mutation($text: String!) {
-    createTodo(text: $text) {
-      id
-      text
-      complete
-    }
   }
 `;
 
@@ -74,50 +42,6 @@ const CreateAthleteMutation = gql`
 
 // Main App component
 class App extends Component {
-  // updateTodo = async todo => {
-  //   // update todo
-  //   await this.props.updateTodo({
-  //     variables: {
-  //       id: todo.id,
-  //       complete: !todo.complete,
-  //     },
-  //     update: store => {
-  //       // Read the data from our cache for this query.
-  //       const data = store.readQuery({ query: TodosQuery });
-  //       // Add our comment from the mutation to the end.
-  //       data.todos = data.todos.map(
-  //         x =>
-  //           x.id === todo.id
-  //             ? {
-  //               ...todo,
-  //               complete: !todo.complete
-  //             }
-  //             : x
-  //       );
-  //       // Write our data back to the cache.
-  //       store.writeQuery({ query: TodosQuery, data });
-  //     },
-  //   });
-  // };
-
-  removeTodo = async todo => {
-    // remove todo
-    await this.props.removeTodo({
-      variables: {
-        id: todo.id,
-      },
-      update: store => {
-        // Read the data from our cache for this query.
-        const data = store.readQuery({ query: TodosQuery });
-        // Add our comment from the mutation to the end.
-        data.todos = data.todos.filter(x => x.id !== todo.id);
-        // Write our data back to the cache.
-        store.writeQuery({ query: TodosQuery, data });
-      },
-    });
-  };
-  // TODO: need to implement remove
-
   removeAthlete = async athlete => {
     await this.props.removeAthlete({
       variables: {
@@ -130,23 +54,7 @@ class App extends Component {
       },
     });
   }
-
-  // createTodo = async text => {
-  //   await this.props.createTodo({
-  //     variables: {
-  //       text,
-  //     },
-  //     update: (store, { data: { createTodo } }) => {
-  //       // Read the data from our cache for this query.
-  //       const data = store.readQuery({ query: TodosQuery });
-  //       // Add our comment from the mutation to the end.
-  //       data.todos.push(createTodo);
-  //       // Write our data back to the cache.
-  //       store.writeQuery({ query: TodosQuery, data });
-  //     },
-  //   });
-  // }
-
+  
   createAthlete = async (first, last) => {
     await this.props.createAthlete({
       variables: {
@@ -159,6 +67,11 @@ class App extends Component {
         store.writeQuery({ query: AthletesQuery, data })
       },
     });
+  }
+
+  athleteClicked = async (id) => {
+    // pull up list of events for that athlete
+    // duplicate the athletes list page for events within that athlete
   }
 
   // app render methods
@@ -182,11 +95,7 @@ class App extends Component {
 }
 
 export default compose(
-  graphql(CreateTodoMutation, { name: 'createTodo' }),
-  graphql(RemoveMutation, { name: 'removeTodo' }),
-  graphql(UpdateMutation, { name: 'updateTodo' }),
   graphql(CreateAthleteMutation, { name: 'createAthlete' }),
   graphql(RemoveAthleteMutation, { name: 'removeAthlete' }),
-  graphql(TodosQuery),
   graphql(AthletesQuery)
 )(App);
